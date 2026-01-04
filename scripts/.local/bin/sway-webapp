@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Wrapper to launch webapps in "app mode" (no UI chrome) using Google Chrome
+# Usage: sway-webapp <URL>
+
+APP_URL="$1"
+
+if [ -z "$APP_URL" ]; then
+    echo "Usage: sway-webapp <URL>"
+    exit 1
+fi
+
+# Use Google Chrome directly as it's installed and supports --app
+exec google-chrome --app="$APP_URL"

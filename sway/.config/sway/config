@@ -64,13 +64,13 @@ bindsym $mod+Shift+n exec $term -- nvim
 bindsym $mod+Shift+t exec $term -- btop
 
 # Web Apps (using firefox by default)
-bindsym $mod+Shift+a exec firefox --new-window "https://chatgpt.com"
-bindsym $mod+Shift+Mod1+a exec firefox --new-window "https://grok.com"
-bindsym $mod+Shift+y exec firefox --new-window "https://youtube.com/"
-bindsym $mod+Shift+Mod1+g exec firefox --new-window "https://web.whatsapp.com/"
-bindsym $mod+Shift+Ctrl+g exec firefox --new-window "https://messages.google.com/web/conversations"
-bindsym $mod+Shift+x exec firefox --new-window "https://x.com/"
-bindsym $mod+Shift+Mod1+x exec firefox --new-window "https://x.com/compose/post"
+bindsym $mod+Shift+a exec sway-webapp "https://chatgpt.com"
+bindsym $mod+Shift+Mod1+a exec sway-webapp "https://grok.com"
+bindsym $mod+Shift+y exec sway-webapp "https://youtube.com/"
+bindsym $mod+Shift+Mod1+g exec sway-webapp "https://web.whatsapp.com/"
+bindsym $mod+Shift+Ctrl+g exec sway-webapp "https://messages.google.com/web/conversations"
+bindsym $mod+Shift+x exec sway-webapp "https://x.com/"
+bindsym $mod+Shift+Mod1+x exec sway-webapp "https://x.com/compose/post"
 
 # Tiling & Window Management
 bindsym $mod+w kill
