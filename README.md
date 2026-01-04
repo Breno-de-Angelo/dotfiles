@@ -1,6 +1,6 @@
-# Breno's Dotfiles (Ubuntu + Sway)
+# Custom Sway Dotfiles (Ubuntu 24.04)
 
-This repository contains my personal configuration files (dotfiles) for a generic **Ubuntu 24.04** installation, adapted to replicate the workflow I had on Omarchy.
+This repository contains my personal configuration files (dotfiles) for a generic **Ubuntu 24.04** installation.
 
 It uses **GNU Stow** to manage symlinks, keeping the home directory clean and the configurations centralized.
 
@@ -75,13 +75,13 @@ cd dotfiles
 Apply the configurations using Stow:
 
 ```bash
-# This creates symlinks from ~/dotfiles/* to ~/ 
+# This creates symlinks from ~/dotfiles/* to ~/
 stow bash
 stow sway
 stow alacritty
 stow starship
 stow scripts
-stow omarchy
+stow core
 ```
 
 ### 5. Setup Secrets
@@ -123,4 +123,4 @@ source ~/.bashrc
 *   `bash/`: `.bashrc` and shell settings.
 *   `starship/`: Prompt visual configuration.
 *   `scripts/`: Custom helper scripts (screenshot, recording, etc) linked to `~/.local/bin`.
-*   `omarchy/`: Legacy configuration files and themes migrated from the previous OS.
+*   `core/`: Base themes and system assets (formerly external dependencies).

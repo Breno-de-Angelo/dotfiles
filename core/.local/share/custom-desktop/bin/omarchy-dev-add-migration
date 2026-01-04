@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ~/.local/share/custom-desktop
+migration_file="$HOME/.local/share/custom-desktop/migrations/$(git log -1 --format=%cd --date=unix).sh"
+touch $migration_file
+nvim $migration_file

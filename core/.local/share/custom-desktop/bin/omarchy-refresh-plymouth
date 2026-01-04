@@ -1,0 +1,10 @@
+#!/bin/bash
+
+sudo cp ~/.local/share/custom-desktop/default/plymouth/* /usr/share/plymouth/themes/custom-desktop/
+sudo plymouth-set-default-theme omarchy
+
+if command -v limine-mkinitcpio &>/dev/null; then
+  sudo limine-mkinitcpio
+else
+  sudo mkinitcpio -P
+fi

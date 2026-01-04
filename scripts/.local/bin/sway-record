@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# sway-record
+# Interactive menu for flexible recording combinations
+# Debugging enabled
+
+PID_FILE="/tmp/custom-desktop-recording.pid"
+LOG_FILE="/tmp/custom-desktop-record.log"
+DIR="$HOME/Videos/Screenrecordings"
+mkdir -p "$DIR"
+FILENAME="$DIR/recording-$(date +'%Y-%m-%d_%H-%M-%S').mp4"
+
+# Logging function
+log() {
+    echo "[$(date '+%H:%M:%S')] $1" >> "$LOG_FILE"
+}
+
+# --- 1. STOP LOGIC ---
+if [ -f "$PID_FILE" ] || pgrep -x "wf-recorder" > /dev/null; then
+    log "Stop requested."
+    
+    if [ -f "$PID_FILE" ]; then
+        PID=$(cat "$PID_FILE")
+        log "Stopping PID $PID from file."
+        kill -SIGINT "$PID" 2>/dev/null
+        rm "$PID_FILE"
+    else
+        log "PID file missing, pkill fallback."
+        pkill -SIGINT -x wf-recorder
+    fi
+
+    # Wait for process to exit
+    count=0
+    while pgrep -x "wf-recorder" > /dev/null && [ $count -lt 50 ]; do
+        sleep 0.1
+        count=$((count+1))
+    done
+
+    notify-send "Recording Saved" "Saved to $DIR"
+    log "Stopped."
+    exit 0
+fi
+
+# --- 2. VIDEO SOURCE MENU ---
+VIDEO_SEL=$(echo -e "  Fullscreen\n  Region\n  Window" | wofi --dmenu --prompt "Video Source" --width 300 --height 200)
+[ -z "$VIDEO_SEL" ] && exit 0
+
+GEOMETRY_VAL=""
+case "$VIDEO_SEL" in
+    *"Region"*) 
+        GEOMETRY_VAL=$(slurp)
+        if [ -z "$GEOMETRY_VAL" ]; then
+             log "Region selection cancelled."
+             exit 0
+        fi
+        ;;
+    *"Window"*) 
+        if ! command -v jq &> /dev/null; then
+            notify-send "Error" "jq is required for Window recording."
+            exit 1
+        fi
+        GEOMETRY_VAL=$(swaymsg -t get_tree | jq -r '.. | select(.type?) | select(.focused? == true).rect | "\(.x),\(.y) \(.width)x\(.height)" ')
+        ;;
+    *"Fullscreen"*) 
+        GEOMETRY_VAL=""
+        ;;
+esac
+
+# --- 3. AUDIO SOURCE MENU ---
+AUDIO_SEL=$(echo -e "  Mute\n  Microphone\n  System Audio" | wofi --dmenu --prompt "Audio Source" --width 300 --height 200)
+[ -z "$AUDIO_SEL" ] && exit 0
+
+# Construct command using array to handle spaces/quotes correctly
+CMD_ARRAY=("wf-recorder" "-f" "$FILENAME")
+
+# Add Geometry if present
+if [ -n "$GEOMETRY_VAL" ]; then
+    CMD_ARRAY+=("-g" "$GEOMETRY_VAL")
+fi
+
+# Add Audio args
+case "$AUDIO_SEL" in
+    *"Microphone"*) 
+        CMD_ARRAY+=("--audio") 
+        ;;
+    *"System"*) 
+        DEFAULT_SINK=$(pactl get-default-sink)
+        if [ -n "$DEFAULT_SINK" ]; then
+            CMD_ARRAY+=("--audio=${DEFAULT_SINK}.monitor")
+        else
+            notify-send "Warning" "No default sink found. Muted."
+        fi
+        ;;
+    *"Mute"*) 
+        ;;
+esac
+
+log "Starting command: ${CMD_ARRAY[*]}"
+notify-send "Recording Started" "Video: $VIDEO_SEL | Audio: $AUDIO_SEL"
+
+# Execute
+"${CMD_ARRAY[@]}" >> "$LOG_FILE" 2>&1 &
+PID=$!
+echo $PID > "$PID_FILE"
+
+# Check if failed immediately
+sleep 1
+if ! kill -0 "$PID" 2>/dev/null; then
+    log "Process $PID died immediately. Check log for details."
+    notify-send "Recording Failed" "Check $LOG_FILE"
+    rm "$PID_FILE"
+fi

@@ -2,8 +2,8 @@
 [[ $- != *i* ]] && return
 
 # Omarchy Setup
-if [ -f ~/.local/share/omarchy/default/bash/rc ]; then
-    source ~/.local/share/omarchy/default/bash/rc
+if [ -f ~/.local/share/custom-desktop/default/bash/rc ]; then
+    source ~/.local/share/custom-desktop/default/bash/rc
 fi
 
 # --- User Specific / Local Configs ---

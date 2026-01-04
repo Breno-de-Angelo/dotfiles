@@ -145,7 +145,7 @@ bindsym $mod+Shift+c reload
 include /etc/sway/config.d/*
 
 # Keybinding Help
-bindsym $mod+k exec ~/.local/share/omarchy/bin/omarchy-menu-keybindings
+bindsym $mod+k exec ~/.local/share/custom-desktop/bin/custom-desktop-menu-keybindings
 
 # Mouse bindings
 floating_modifier $mod normal
@@ -153,12 +153,12 @@ floating_modifier $mod normal
 # Screenshot & Recording Bindings
 
 # Screenshots
-bindsym Print exec ~/.local/bin/omarchy-screenshot-helper full
-bindsym Shift+Print exec ~/.local/bin/omarchy-screenshot-helper region
-bindsym Control+Print exec ~/.local/bin/omarchy-screenshot-helper window
+bindsym Print exec ~/.local/bin/custom-desktop-screenshot-helper full
+bindsym Shift+Print exec ~/.local/bin/custom-desktop-screenshot-helper region
+bindsym Control+Print exec ~/.local/bin/custom-desktop-screenshot-helper window
 
 # Screen Recording (Shift+Alt+R starts/stops)
-bindsym Mod1+Shift+r exec ~/.local/bin/omarchy-screenrecord-helper full
-bindsym Mod1+Shift+s exec ~/.local/bin/omarchy-screenrecord-helper region
+bindsym Mod1+Shift+r exec ~/.local/bin/custom-desktop-screenrecord-helper full
+bindsym Mod1+Shift+s exec ~/.local/bin/custom-desktop-screenrecord-helper region
 
-bindsym Mod1+Shift+v exec ~/.local/bin/omarchy-screenrecord-helper
+bindsym Mod1+Shift+v exec ~/.local/bin/custom-desktop-screenrecord-helper
