@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Extract keybindings from Sway config
+# 1. Get config text
+# 2. Filter for bindsym lines
+# 3. Clean up whitespace
+# 4. Format as "Key Combo  ->  Command"
+# 5. Display with wofi
+
+CONFIG_TEXT=$(swaymsg -t get_config | jq -r .config)
+
+# Get the value of $mod (e.g., Mod4)
+MOD_VAL=$(echo "$CONFIG_TEXT" | grep "^set \$mod" | awk '{print $3}')
+[ -z "$MOD_VAL" ] && MOD_VAL="Mod4"
+
+# Display name for Mod key
+MOD_NAME="Super"
+[ "$MOD_VAL" == "Mod1" ] && MOD_NAME="Alt"
+
+echo "$CONFIG_TEXT" | \
+grep "^\s*bindsym" | \
+sed "s/\$mod/$MOD_NAME/g" | \
+sed -E 's/^\s*bindsym\s+(--to-code\s+)?(--locked\s+)?//' | \
+awk '{ 
+    # The first field is the key combo
+    keys = $1;
+    
+    # The rest is the command
+    $1 = "";
+    cmd = $0;
+    
+    # Remove leading spaces from command
+    gsub(/^\s+/, "", cmd);
+    
+    # Remove "exec" prefix if present for cleaner look
+    sub(/^exec\s+/, "", cmd);
+    
+    # Format
+    printf "% -30s  →  %s\n", keys, cmd;
+}' | \
+sort | \
+wofi --dmenu --width 1000 --height 600 --prompt "Sway Keybindings"

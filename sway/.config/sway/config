@@ -1,0 +1,164 @@
+# Sway Configuration - Migrated from Omarchy
+# Based on Tokyo Night Theme
+
+# --- Tokyo Night Theme Colors ---
+set $bg #1a1b26
+set $fg #c0caf5
+set $active #7aa2f7
+set $inactive #292e42
+set $urgent #f7768e
+set $text_active #16161e
+set $text_inactive #545c7e
+
+# --- Variables ---
+set $mod Mod4
+# set $term gnome-terminal
+set $term alacritty
+set $menu wofi --show drun
+
+# --- Output Configuration ---
+# Wallpaper
+output * bg /home/breno/.config/sway/wallpaper.jpg fill
+
+# --- Input Configuration ---
+# Default input config - adjust as needed
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    natural_scroll enabled
+    middle_emulation enabled
+}
+input type:keyboard {
+    xkb_layout br
+    xkb_numlock enabled
+    # xkb_options caps:escape # Optional: remap caps to escape
+}
+
+# --- Appearance ---
+# Window colors
+# class                 border    backgr    text    indicator child_border
+client.focused          $active   $active   $text_active  $active   $active
+client.focused_inactive $inactive $inactive $text_inactive $inactive $inactive
+client.unfocused        $inactive $bg       $text_inactive $inactive $inactive
+client.urgent           $urgent   $urgent   $text_active   $urgent   $urgent
+
+font pango:monospace 10
+
+# Gap settings (migrated from hyprland looknfeel, which had 0, but you can adjust)
+gaps inner 0
+gaps outer 0
+default_border pixel 2
+
+# --- Bar Configuration ---
+# Using external Waybar
+exec --no-startup-id waybar
+
+# --- Key Bindings ---
+
+# App Bindings
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+f exec nautilus --new-window
+bindsym $mod+Shift+b exec firefox
+bindsym $mod+Shift+Mod1+b exec firefox --private-window
+bindsym $mod+Shift+n exec $term -- nvim
+bindsym $mod+Shift+t exec $term -- btop
+
+# Web Apps (using firefox by default)
+bindsym $mod+Shift+a exec firefox --new-window "https://chatgpt.com"
+bindsym $mod+Shift+Mod1+a exec firefox --new-window "https://grok.com"
+bindsym $mod+Shift+y exec firefox --new-window "https://youtube.com/"
+bindsym $mod+Shift+Mod1+g exec firefox --new-window "https://web.whatsapp.com/"
+bindsym $mod+Shift+Ctrl+g exec firefox --new-window "https://messages.google.com/web/conversations"
+bindsym $mod+Shift+x exec firefox --new-window "https://x.com/"
+bindsym $mod+Shift+Mod1+x exec firefox --new-window "https://x.com/compose/post"
+
+# Tiling & Window Management
+bindsym $mod+w kill
+bindsym $mod+j layout toggle split
+bindsym $mod+t floating toggle
+bindsym $mod+f fullscreen toggle
+bindsym $mod+Mod1+f fullscreen global
+
+bindsym $mod+o move scratchpad; scratchpad show
+bindsym $mod+s scratchpad show
+bindsym $mod+Mod1+s move scratchpad
+
+# Focus
+bindsym $mod+Left focus left
+bindsym $mod+Right focus right
+bindsym $mod+Up focus up
+bindsym $mod+Down focus down
+
+# Move
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Right move right
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Down move down
+
+# Workspaces
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+# Tab workspaces
+bindsym $mod+Tab workspace next
+bindsym $mod+Shift+Tab workspace prev
+
+# Resizing (Basic)
+mode "resize" {
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+set $menu wofi --show drun
+bindsym $mod+d exec $menu
+set $term alacritty
+
+# Reload configuration
+bindsym $mod+Shift+c reload
+# Exit sway (logs you out of your Wayland session)
+# bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+
+include /etc/sway/config.d/*
+
+# Keybinding Help
+bindsym $mod+k exec ~/.local/share/omarchy/bin/omarchy-menu-keybindings
+
+# Mouse bindings
+floating_modifier $mod normal
+
+# Screenshot & Recording Bindings
+
+# Screenshots
+bindsym Print exec ~/.local/bin/omarchy-screenshot-helper full
+bindsym Shift+Print exec ~/.local/bin/omarchy-screenshot-helper region
+bindsym Control+Print exec ~/.local/bin/omarchy-screenshot-helper window
+
+# Screen Recording (Shift+Alt+R starts/stops)
+bindsym Mod1+Shift+r exec ~/.local/bin/omarchy-screenrecord-helper full
+bindsym Mod1+Shift+s exec ~/.local/bin/omarchy-screenrecord-helper region
+
+bindsym Mod1+Shift+v exec ~/.local/bin/omarchy-screenrecord-helper
