@@ -1,0 +1,1 @@
+/home/breno/.config/custom-desktop/current/neovim.lua
